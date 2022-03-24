@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Calculator</string>
+    <string name="visor">My Calculator</string>
 </resources>
