@@ -3,7 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Diogo Casaca/AndroidStudioProjects/calculator_android/app/src/main/res/drawable/ic_baseline_calculate_24.xml" value="0.1" />
+        <entry key="..\:/Users/Diogo Casaca/AndroidStudioProjects/calculator_android/app/src/main/res/drawable/ic_calculator.xml" value="0.177" />
+        <entry key="..\:/Users/Diogo Casaca/AndroidStudioProjects/calculator_android/app/src/main/res/drawable/ic_history.xml" value="0.177" />
+        <entry key="..\:/Users/Diogo Casaca/AndroidStudioProjects/calculator_android/app/src/main/res/layout-land/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Diogo Casaca/AndroidStudioProjects/calculator_android/app/src/main/res/layout-land/fragment_calculator.xml" value="0.17063492063492064" />
         <entry key="..\:/Users/Diogo Casaca/AndroidStudioProjects/calculator_android/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Diogo Casaca/AndroidStudioProjects/calculator_android/app/src/main/res/layout/fragment_calculator.xml" value="0.2015625" />
+        <entry key="..\:/Users/Diogo Casaca/AndroidStudioProjects/calculator_android/app/src/main/res/layout/fragment_history.xml" value="0.1" />
+        <entry key="..\:/Users/Diogo Casaca/AndroidStudioProjects/calculator_android/app/src/main/res/layout/item_expression.xml" value="0.1" />
+        <entry key="..\:/Users/Diogo Casaca/AndroidStudioProjects/calculator_android/app/src/main/res/menu/drawer_menu.xml" value="0.1" />
         <entry key="..\:/Users/Okkage/AndroidStudioProjects/MyApplication2/app/src/main/res/layout/activity_main.xml" value="0.2" />
       </map>
     </option>

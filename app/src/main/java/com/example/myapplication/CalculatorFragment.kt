@@ -1,98 +1,47 @@
 package com.example.myapplication
 
-import android.content.ContentValues.TAG
-import android.graphics.Path
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myapplication.databinding.ActivityMainBinding
+import com.example.myapplication.databinding.FragmentCalculatorBinding
 import net.objecthunter.exp4j.ExpressionBuilder
 import java.text.SimpleDateFormat
 import java.util.*
-import com.example.myapplication.NavigationManager
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity() {
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
-    //object listaHistorico : ArrayList<OperationUI>()
+/**
+ * A simple [Fragment] subclass.
+ * Use the [CalculatorFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class CalculatorFragment : Fragment() {
+
+    private lateinit var binding: FragmentCalculatorBinding
+    private val TAG = CalculatorFragment::class.java.simpleName
     var listaHistorico : ArrayList<OperationUI> = ArrayList()
-    private lateinit var binding: ActivityMainBinding
-    private val TAG = MainActivity::class.java.simpleName
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i(TAG, "onCreated invoke")
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        if(!screenRotated(savedInstanceState)){
-            NavigationManager.goToCalculatorFragment(supportFragmentManager)
-        }
+    private val adapter = HistoryAdapter(::onOperationLongClick,::onOperationClick)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        val view = inflater.inflate(
+            R.layout.fragment_calculator,container,false
+        )
+        binding = FragmentCalculatorBinding.bind(view)
+        return binding.root
     }
 
-    override fun onStart(){
-        super.onStart()
-        listaHistorico.add(OperationUI("10+10","20",10))
-        setSupportActionBar(binding.toolbar)
-        setupDrawerMenu()
-        NavigationManager.goToCalculatorFragment(supportFragmentManager)
-    }
-
-    override fun onBackPressed() {
-        if(binding.drawer.isDrawerOpen(GravityCompat.START)){
-            binding.drawer.closeDrawer(GravityCompat.START)
-        }else if(supportFragmentManager.backStackEntryCount == 1){
-            finish()
-        }else{
-
-            super.onBackPressed()
-        }
-    }
-
-    private fun screenRotated(savedInstanceState: Bundle?): Boolean {
-    return savedInstanceState != null
-    }
-
-    private fun setupDrawerMenu(){
-        val toggle = ActionBarDrawerToggle(this,binding.drawer,binding.toolbar,R.string.drawer_open,R.string.drawer_close)
-
-        binding.navDrawer.setNavigationItemSelectedListener {
-            onClickNavigationItem(it)
-        }
-        binding.drawer.addDrawerListener(toggle)
-        toggle.syncState()
-    }
-
-    private fun onClickNavigationItem(item : MenuItem) : Boolean {
-        when(item.itemId) {
-            R.id.nav_calculator ->
-                NavigationManager.goToCalculatorFragment(supportFragmentManager)
-
-            R.id.nav_history -> {
-                NavigationManager.goToHistoryFragment(supportFragmentManager,listaHistorico)
-            }
-
-        }
-        binding.drawer.closeDrawer(GravityCompat.START)
-        return true
-    }
-
-
-}
-
-
-
-
-
-    /*
-
-
-    val listaHistorico: MutableList<OperationUI> = mutableListOf()
-    private val adapter = HistoryAdapter(::onOperationLongClick, ::onOperationClick)
     override fun onStart() {
         super.onStart()
 
@@ -115,18 +64,13 @@ class MainActivity : AppCompatActivity() {
         binding.buttonEquals.setOnClickListener {onClickEquals()}
 
 
-        binding.rvHistoric?.layoutManager = LinearLayoutManager(this)
+        binding.rvHistoric?.layoutManager = LinearLayoutManager(activity as Context)
         binding.rvHistoric?.adapter = adapter
 
 
 
 
 
-    }
-
-    override fun onDestroy() {
-        Log.i(TAG, "onDestroy inkoke")
-        super.onDestroy()
     }
 
     private fun onClickSymbol(symbol: String){
@@ -170,15 +114,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun onOperationClick(operation: OperationUI){
 
-        Toast.makeText(this,"${operation.expression} = ${operation.result}",Toast.LENGTH_LONG).show()
+        Toast.makeText(activity,"${operation.expression} = ${operation.result}", Toast.LENGTH_LONG).show()
     }
 
     private fun onOperationLongClick(operation : OperationUI){
         val sdf = SimpleDateFormat("dd/M/yyyy - hh:mm:ss")
         var currentDate = sdf.format(Date())
-        Toast.makeText(this, currentDate,Toast.LENGTH_LONG).show()
+        Toast.makeText(activity, currentDate, Toast.LENGTH_LONG).show()
     }
 
-     */
 
-
+}

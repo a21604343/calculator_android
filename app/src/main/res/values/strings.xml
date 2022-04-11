@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">My Calculator</string>
     <string name="visor">My Calculator</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- DRAWER -->
+    <string name="calculator">Calculadora</string>
+    <string name="history">Histórico</string>
+    <string name="drawer_open">Aberto</string>
+    <string name="drawer_close">Fechado</string>
 </resources>
