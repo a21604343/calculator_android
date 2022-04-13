@@ -30,7 +30,7 @@ private const val ARG_OPERATIONS = "param1"
 class HistoryFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var operations: ArrayList<OperationUI>? = null // arguments
-
+    private lateinit var viewModel: CalculatorViewModel
     private lateinit var binding: FragmentHistoryBinding
     private val TAG = HistoryFragment::class.java.simpleName
     //val listaHistorico : Array<OperationUI> = arguments.getParcelableArray(ARG_OPERATIONS)
@@ -62,10 +62,11 @@ class HistoryFragment : Fragment() {
         if (arguments == null){
             Log.i(TAG, "LISTA VAZIA")
         }
-        operations?.let { it1 -> adapter.updateItems(it1) }
-
+        //operations?.let { it1 -> adapter.updateItems(it1) }
+        viewModel.getHistory { operations }
         binding.rvHistoricPortrait.layoutManager = LinearLayoutManager(activity as Context)
         binding.rvHistoricPortrait.adapter = adapter
+
     }
 
     override fun onResume() {

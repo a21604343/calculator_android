@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart(){
         super.onStart()
-        listaHistorico.add(OperationUI("10+10","20",10))
+        listaHistorico.add(OperationUI("10+10",20.0,10))
         setSupportActionBar(binding.toolbar)
         setupDrawerMenu()
         NavigationManager.goToCalculatorFragment(supportFragmentManager)
