@@ -37,7 +37,7 @@ class CalculatorFragment : Fragment() {
     private val adapter = HistoryAdapter(::onOperationLongClick,::onOperationClick)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+        Log.i(TAG, "create view")
         val view = inflater.inflate(
             R.layout.fragment_calculator,container,false
         )
@@ -46,29 +46,31 @@ class CalculatorFragment : Fragment() {
             CalculatorViewModel::class.java
         )
         binding.textVisor.text = viewModel.getDisplayValue()
+        Log.i(TAG, binding.textVisor.text.toString())
+
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
 
-        binding.button1.setOnClickListener {viewModel.onClickSymbol("1")}
-        binding.button2.setOnClickListener {viewModel.onClickSymbol("2")}
-        binding.button3.setOnClickListener {viewModel.onClickSymbol("3")}
-        binding.button4.setOnClickListener {viewModel.onClickSymbol("4")}
-        binding.button5.setOnClickListener {viewModel.onClickSymbol("5")}
-        binding.button6.setOnClickListener {viewModel.onClickSymbol("6")}
-        binding.button7.setOnClickListener {viewModel.onClickSymbol("7")}
-        binding.button8.setOnClickListener {viewModel.onClickSymbol("8")}
-        binding.button9.setOnClickListener {viewModel.onClickSymbol("9")}
-        binding.button0.setOnClickListener {viewModel.onClickSymbol("0")}
-        binding.buttonAdition.setOnClickListener {viewModel.onClickSymbol("+")}
-        binding.buttonMinus.setOnClickListener {viewModel.onClickSymbol("-")}
-        binding.buttonDivide.setOnClickListener {viewModel.onClickSymbol("/")}
-        binding.buttonQuestionMark.setOnClickListener {viewModel.onClickSymbol("*")}
-        binding.buttonClear.setOnClickListener {viewModel.onClickSymbol("C")}
-        binding.buttonSmaller.setOnClickListener {viewModel.onClickSymbol("P")}
-        binding.buttonEquals.setOnClickListener {viewModel.onClickEquals()}
+        binding.button1.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("1")}
+        binding.button2.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("2")}
+        binding.button3.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("3")}
+        binding.button4.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("4")}
+        binding.button5.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("5")}
+        binding.button6.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("6")}
+        binding.button7.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("7")}
+        binding.button8.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("8")}
+        binding.button9.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("9")}
+        binding.button0.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("0")}
+        binding.buttonAdition.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("+")}
+        binding.buttonMinus.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("-")}
+        binding.buttonDivide.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("/")}
+        binding.buttonQuestionMark.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("*")}
+        binding.buttonClear.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("C")}
+        binding.buttonSmaller.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("P")}
+        binding.buttonEquals.setOnClickListener {binding.textVisor.text = viewModel.onClickEquals()}
 
 
         binding.rvHistoric?.layoutManager = LinearLayoutManager(activity as Context)

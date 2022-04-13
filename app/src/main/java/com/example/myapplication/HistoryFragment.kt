@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.databinding.FragmentCalculatorBinding
 import com.example.myapplication.databinding.FragmentHistoryBinding
@@ -52,6 +53,9 @@ class HistoryFragment : Fragment() {
         )
 
         binding = FragmentHistoryBinding.bind(view)
+        viewModel = ViewModelProvider(this).get(
+            CalculatorViewModel::class.java
+        )
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Histórico Operações"
         return binding.root
     }
@@ -63,7 +67,8 @@ class HistoryFragment : Fragment() {
             Log.i(TAG, "LISTA VAZIA")
         }
         //operations?.let { it1 -> adapter.updateItems(it1) }
-        viewModel.getHistory { operations }
+        viewModel.getHistory { operations?.let { it1 -> adapter.updateItems(it1) } }
+        //operations?.let { adapter.updateItems(it) }
         binding.rvHistoricPortrait.layoutManager = LinearLayoutManager(activity as Context)
         binding.rvHistoricPortrait.adapter = adapter
 
