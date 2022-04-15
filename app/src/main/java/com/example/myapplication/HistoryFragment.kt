@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.databinding.FragmentCalculatorBinding
 import com.example.myapplication.databinding.FragmentHistoryBinding
@@ -33,6 +35,8 @@ class HistoryFragment : Fragment() {
     private var operations: ArrayList<OperationUI>? = null // arguments
     private lateinit var viewModel: CalculatorViewModel
     private lateinit var binding: FragmentHistoryBinding
+
+    private var listaHistorico: ArrayList<OperationUI>? = null
     private val TAG = HistoryFragment::class.java.simpleName
     //val listaHistorico : Array<OperationUI> = arguments.getParcelableArray(ARG_OPERATIONS)
     //var listaHistorico : MutableList<OperationUI> = mutableListOf()
@@ -53,7 +57,7 @@ class HistoryFragment : Fragment() {
         )
 
         binding = FragmentHistoryBinding.bind(view)
-        viewModel = ViewModelProvider(this).get(
+        viewModel = ViewModelProvider(activity as ViewModelStoreOwner).get(
             CalculatorViewModel::class.java
         )
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Histórico Operações"
@@ -63,11 +67,14 @@ class HistoryFragment : Fragment() {
     override fun onStart(){
         super.onStart()
         //listaHistorico.add(OperationUI("5+12","17",10))
-        if (arguments == null){
+
+        //operations?.let { it1 -> adapter.updateItems(it1) }
+        //viewModel.getHistory { listaHistorico }
+        adapter.updateItems(viewModel.getLista())
+        if (listaHistorico == null){
             Log.i(TAG, "LISTA VAZIA")
         }
-        //operations?.let { it1 -> adapter.updateItems(it1) }
-        viewModel.getHistory { operations?.let { it1 -> adapter.updateItems(it1) } }
+        listaHistorico?.let { adapter.updateItems(it) }
         //operations?.let { adapter.updateItems(it) }
         binding.rvHistoricPortrait.layoutManager = LinearLayoutManager(activity as Context)
         binding.rvHistoricPortrait.adapter = adapter

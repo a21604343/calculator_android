@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.databinding.FragmentCalculatorBinding
 import net.objecthunter.exp4j.ExpressionBuilder
@@ -42,9 +44,11 @@ class CalculatorFragment : Fragment() {
             R.layout.fragment_calculator,container,false
         )
         binding = FragmentCalculatorBinding.bind(view)
-        viewModel = ViewModelProvider(this).get(
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Calculadora"
+        viewModel = ViewModelProvider(activity as ViewModelStoreOwner).get(
             CalculatorViewModel::class.java
         )
+
         binding.textVisor.text = viewModel.getDisplayValue()
         Log.i(TAG, binding.textVisor.text.toString())
 
@@ -53,7 +57,8 @@ class CalculatorFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
+        viewModel.getHistory { listaHistorico }
+        adapter.updateItems(listaHistorico)
         binding.button1.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("1")}
         binding.button2.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("2")}
         binding.button3.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("3")}

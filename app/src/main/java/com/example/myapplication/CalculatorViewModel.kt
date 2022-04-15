@@ -15,7 +15,7 @@ class CalculatorViewModel : ViewModel() {
 
     fun getDisplayValue() : String {
 
-        return model.displaySaved
+        return model.display
     }
 
      fun onClickSymbol(symbol: String) : String{
@@ -39,14 +39,37 @@ class CalculatorViewModel : ViewModel() {
      */
 
 
-    fun getHistory(callback: (List<OperationUI>) ->Unit) {
-        model.getHistory({ operations ->
-            val history = operations.map{
-                OperationUI(it.expression,it.result,it.timestamp)
-            }
-           CoroutineScope(Dispatchers.Main).launch { callback(history) }
-        })
+
+    fun getLista() : ArrayList<OperationUI>{
+
+        var  res  = model.getLista().map { OperationUI(it.expression,it.result,it.timestamp) }
+        return res as ArrayList<OperationUI>
     }
+
+
+    fun getHistory(callback: (List<OperationUI>) -> Unit) {
+        var history : List<OperationUI> = mutableListOf()
+        model.getHistory({ operations ->
+            history = operations.map {
+                OperationUI(it.expression, it.result, it.timestamp)
+            }
+
+        })
+        CoroutineScope(Dispatchers.Main).launch { callback(history) }
+    }
+    /*
+    fun getHistory1(callback: (List<OperationUI>) -> List<Operation>) {
+       val history =  model.getHistory({op})
+            CoroutineScope(Dispatchers.Main).launch { callback(history) }
+        }
+    }
+
+     */
+
+
+
+
+
 
     private fun onOperationClick(activity : Activity, operation: OperationUI){
         model.onOperationClick(activity,operation)

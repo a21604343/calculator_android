@@ -9,23 +9,14 @@ import kotlinx.coroutines.launch
 import net.objecthunter.exp4j.ExpressionBuilder
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Calculator {
 
     private val TAG = Calculator::class.java.simpleName
-     var display : String = "0"
-   var displaySaved : String = ""
-    private val listaHistorico = mutableListOf<Operation>()
+    var display : String = "0"
 
-   /*
-    fun checkDisplay() : String{
-        if(display.isEmpty()){
-            display = "0"
-        }
-        return display
-    }
-
-    */
+    private val listaHistorico : ArrayList<Operation> = arrayListOf()
 
     fun insertSymbol(symbol : String) : String {
 
@@ -42,7 +33,7 @@ class Calculator {
                 display+=symbol
             }
         }
-        displaySaved = display
+
         return display
     }
 
@@ -54,24 +45,31 @@ class Calculator {
         val result = expressionBuilder.evaluate()
         Log.i(TAG, "O resultado da expressão é ${result}")
         CoroutineScope(Dispatchers.IO).launch {
+
             addHistory(display,result)
 
         }
 
         display = result.toString()
-        displaySaved = display
+
       return result
 
     }
 
+    fun getLista () : ArrayList<Operation> {
+        return ArrayList(listaHistorico)
+    }
+
+
     suspend fun addHistory(expression : String, result : Double) {
-        Thread.sleep(30*1000)
+        Thread.sleep(30*100)
         listaHistorico.add(Operation(expression,result))
+        Log.i(TAG, "Adicionou operação á lista || ${listaHistorico.size}")
     }
 
     fun getHistory(callback: (List<Operation> ) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            Thread.sleep(30*1000)
+            Thread.sleep(30*10)
             callback(listaHistorico.toList())
         }
     }

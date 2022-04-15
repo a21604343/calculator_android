@@ -23,13 +23,18 @@ class MainActivity : AppCompatActivity() {
     var listaHistorico : ArrayList<OperationUI> = ArrayList()
     private lateinit var binding: ActivityMainBinding
     private val TAG = MainActivity::class.java.simpleName
+    var instancia : Bundle? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i(TAG, "onCreated invoke")
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        if(!screenRotated(savedInstanceState)){
+        if (savedInstanceState != null) {
+            instancia = savedInstanceState
+        }
+        if(screenRotated(savedInstanceState)){
+            Log.i(TAG, "screenRotated1")
             NavigationManager.goToCalculatorFragment(supportFragmentManager)
         }
 
@@ -42,7 +47,11 @@ class MainActivity : AppCompatActivity() {
         //listaHistorico.add(OperationUI("10+10",20.0,10))
         setSupportActionBar(binding.toolbar)
         setupDrawerMenu()
-        NavigationManager.goToCalculatorFragment(supportFragmentManager)
+        if(!screenRotated(instancia)){
+            Log.i(TAG, "screenRotated2")
+            NavigationManager.goToCalculatorFragment(supportFragmentManager)
+        }
+
     }
 
     override fun onBackPressed() {
