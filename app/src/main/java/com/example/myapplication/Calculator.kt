@@ -11,12 +11,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Calculator {
+class Calculator (private val dao: OperationDao) {
 
     private val TAG = Calculator::class.java.simpleName
     var display : String = "0"
 
-    private val listaHistorico : ArrayList<Operation> = arrayListOf()
+    private set
 
     fun insertSymbol(symbol : String) : String {
 
@@ -43,10 +43,13 @@ class Calculator {
 
         val expressionBuilder = ExpressionBuilder(display).build()
         val result = expressionBuilder.evaluate()
+        val expression = result.toString()
+        val operation = OperationRoom(
+            expression = expression, result = result, timestamp = Date().time
+        )
         Log.i(TAG, "O resultado da expressão é ${result}")
         CoroutineScope(Dispatchers.IO).launch {
-
-            addHistory(display,result)
+            dao.insert(operation)
 
         }
 
@@ -56,23 +59,18 @@ class Calculator {
 
     }
 
-    fun getLista () : ArrayList<Operation> {
-        return ArrayList(listaHistorico)
+      fun getAllOperations (onFinished: (List<OperationUI>) -> Unit) {
+          CoroutineScope(Dispatchers.IO).launch {
+            val operations =  dao.getAll()
+              onFinished(operations.map {
+                  OperationUI(it.uuid,it.expression,it.result,it.timestamp)
+              })
+          }
     }
 
 
-    suspend fun addHistory(expression : String, result : Double) {
-        Thread.sleep(30*100)
-        listaHistorico.add(Operation(expression,result))
-        Log.i(TAG, "Adicionou operação á lista || ${listaHistorico.size}")
-    }
 
-    fun getHistory(callback: (List<Operation> ) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            Thread.sleep(30*10)
-            callback(listaHistorico.toList())
-        }
-    }
+
 
      fun onOperationClick(activity : Activity, operation: OperationUI){
 

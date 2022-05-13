@@ -19,4 +19,6 @@ object NavigationManager {
     fun goToHistoryFragment( fm : FragmentManager, lista : ArrayList<OperationUI>){
         placeFragment(fm,HistoryFragment.newInstance(lista))
     }
+
+
 }

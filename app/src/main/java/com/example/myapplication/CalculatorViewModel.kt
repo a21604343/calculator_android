@@ -1,17 +1,18 @@
 package com.example.myapplication
 
 import android.app.Activity
-import android.widget.Toast
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.content.IntentSender
+import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
-class CalculatorViewModel : ViewModel() {
+class CalculatorViewModel (application : Application) : AndroidViewModel(application) {
 
-    private val model = Calculator()
+    private val model = Calculator(
+        CalculatorDatabase.getInstance(application).operationDao()
+    )
 
     fun getDisplayValue() : String {
 
@@ -27,47 +28,15 @@ class CalculatorViewModel : ViewModel() {
         val result = model.performOperation()
         return result.toString()
     }
-    /*
-    fun getHistory(callback: (List<OperationUI>) ->Unit) {
-        val history = model.getHistory({ operations -> operations.map{
-                OperationUI(it.expression,it.result,it.timestamp)
-            })
-            CoroutineScope(Dispatchers.Main).launch { callback(history) }
-        }
+
+
+
+
+
+    fun getHistory(onFinished: (List<OperationUI>) -> Unit) {
+        model.getAllOperations(onFinished)
+
     }
-
-     */
-
-
-
-    fun getLista() : ArrayList<OperationUI>{
-
-        var  res  = model.getLista().map { OperationUI(it.expression,it.result,it.timestamp) }
-        return res as ArrayList<OperationUI>
-    }
-
-
-    fun getHistory(callback: (List<OperationUI>) -> Unit) {
-        var history : List<OperationUI> = mutableListOf()
-        model.getHistory({ operations ->
-            history = operations.map {
-                OperationUI(it.expression, it.result, it.timestamp)
-            }
-
-        })
-        CoroutineScope(Dispatchers.Main).launch { callback(history) }
-    }
-    /*
-    fun getHistory1(callback: (List<OperationUI>) -> List<Operation>) {
-       val history =  model.getHistory({op})
-            CoroutineScope(Dispatchers.Main).launch { callback(history) }
-        }
-    }
-
-     */
-
-
-
 
 
 

@@ -57,8 +57,9 @@ class CalculatorFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.getHistory { listaHistorico }
-        adapter.updateItems(listaHistorico)
+        //viewModel.getHistory { listaHistorico }v
+        viewModel.getHistory { adapter.updateItems(it) }
+
         binding.button1.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("1")}
         binding.button2.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("2")}
         binding.button3.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("3")}
@@ -87,44 +88,6 @@ class CalculatorFragment : Fragment() {
 
     }
 
-    private fun onClickSymbol(symbol: String){
-
-        Log.i(TAG, "Click no Butao $symbol")
-        if(symbol == "C"){
-            binding.textVisor.text = ""
-        }
-        else if (symbol == "P"){
-            binding.textVisor.text.subSequence(0,binding.textVisor.text.length-2)
-        }else{
-            if (binding.textVisor.text == "0") {
-                binding.textVisor.text = symbol
-            } else {
-                binding.textVisor.append(symbol)
-            }
-        }
-
-
-
-
-
-
-    }
-
-    private fun onClickEquals(){
-
-        Log.i(TAG, "Click no butao =")
-        val expressionStart = binding.textVisor.text.toString()
-        val expression = ExpressionBuilder(
-            binding.textVisor.text.toString()
-        ).build()
-        binding.textVisor.text = expression.evaluate().toString()
-
-        var op : OperationUI = OperationUI(expressionStart,binding.textVisor.text as Double,System.currentTimeMillis())
-        listaHistorico.add(op)
-        adapter.updateItems(listaHistorico)
-        Log.i(TAG, "O resultado da expressão é ${binding.textVisor.text}")
-
-    }
 
     private fun onOperationClick(operation: OperationUI){
 

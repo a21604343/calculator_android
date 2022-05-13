@@ -45,7 +45,7 @@ class HistoryAdapter(private val onOperationLongClick: (OperationUI) -> Unit, pr
         return items.size
     }
 
-    fun updateItems(items: ArrayList<OperationUI>){
+    fun updateItems(items: List<OperationUI>){
         this.items = items
         notifyDataSetChanged()
     }

@@ -16,6 +16,12 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.databinding.FragmentCalculatorBinding
 import com.example.myapplication.databinding.FragmentHistoryBinding
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -36,7 +42,7 @@ class HistoryFragment : Fragment() {
     private lateinit var viewModel: CalculatorViewModel
     private lateinit var binding: FragmentHistoryBinding
 
-    private var listaHistorico: ArrayList<OperationUI>? = null
+
     private val TAG = HistoryFragment::class.java.simpleName
     //val listaHistorico : Array<OperationUI> = arguments.getParcelableArray(ARG_OPERATIONS)
     //var listaHistorico : MutableList<OperationUI> = mutableListOf()
@@ -66,19 +72,23 @@ class HistoryFragment : Fragment() {
 
     override fun onStart(){
         super.onStart()
-        //listaHistorico.add(OperationUI("5+12","17",10))
+        getAllOperationsWs { updateList(it) }
+        //viewModel.getHistory { adapter.updateItems(it) }
 
-        //operations?.let { it1 -> adapter.updateItems(it1) }
-        //viewModel.getHistory { listaHistorico }
-        adapter.updateItems(viewModel.getLista())
-        if (listaHistorico == null){
-            Log.i(TAG, "LISTA VAZIA")
-        }
-        listaHistorico?.let { adapter.updateItems(it) }
-        //operations?.let { adapter.updateItems(it) }
+
+
+
         binding.rvHistoricPortrait.layoutManager = LinearLayoutManager(activity as Context)
         binding.rvHistoricPortrait.adapter = adapter
 
+    }
+
+    private fun updateList(fires : List<OperationUI>){
+
+
+        CoroutineScope(Dispatchers.Main).launch {
+            adapter.updateItems(fires)
+        }
     }
 
     override fun onResume() {
@@ -102,16 +112,30 @@ class HistoryFragment : Fragment() {
     }
 
 
+    private fun getAllOperationsWs(callback: (List<OperationUI>) -> Unit){
+        data class GetAllOperationsResponse(val uuid : String, val expression : String, val result: Double, val timestamp : Long)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val request : Request = Request.Builder()
+                .url("https://cm-calculadora.herokuapp.com/api/operations")
+                .addHeader("apikey","8270435acfead39ccb03e8aafbf37c49359dfbbcac4ef4769ae82c9531da0e17")
+                .build()
+
+                val response = OkHttpClient().newCall(request).execute().body
+                if (response != null){
+                    val responseObj = Gson().fromJson(response.string(),
+                        Array<GetAllOperationsResponse>::class.java).toList()
+                    callback(responseObj.map {
+                        OperationUI(it.uuid,it.expression,it.result,it.timestamp)
+                    })
+
+                }
+        }
+
+    }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HistoryFragment.
-         */
+
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(operations : ArrayList<OperationUI>) =

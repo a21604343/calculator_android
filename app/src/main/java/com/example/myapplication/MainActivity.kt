@@ -1,20 +1,13 @@
 package com.example.myapplication
 
-import android.content.ContentValues.TAG
-import android.graphics.Path
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.databinding.ActivityMainBinding
-import net.objecthunter.exp4j.ExpressionBuilder
-import java.text.SimpleDateFormat
-import java.util.*
-import com.example.myapplication.NavigationManager
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
