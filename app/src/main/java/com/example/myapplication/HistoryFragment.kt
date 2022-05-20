@@ -72,44 +72,29 @@ class HistoryFragment : Fragment() {
 
     override fun onStart(){
         super.onStart()
-        getAllOperationsWs { updateList(it) }
+        //getAllOperationsWs { updateList(it) }
+        binding.rvHistoricPortrait.layoutManager = LinearLayoutManager(activity as Context)
+        binding.rvHistoricPortrait.adapter = adapter
+        getAllOperationsRetrofit { updateList(it) }
+
         //viewModel.getHistory { adapter.updateItems(it) }
 
 
 
-
-        binding.rvHistoricPortrait.layoutManager = LinearLayoutManager(activity as Context)
-        binding.rvHistoricPortrait.adapter = adapter
-
     }
 
     private fun updateList(fires : List<OperationUI>){
-
 
         CoroutineScope(Dispatchers.Main).launch {
             adapter.updateItems(fires)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+    private fun getAllOperationsRetrofit(callback: (List<OperationUI>) -> Unit){
+            viewModel.onGetHistory(callback)
+
     }
 
-    override fun onPause() {
-        super.onPause()
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
-    }
-    private fun onOperationClick(operation: OperationUI){
-
-        Toast.makeText(activity,"${operation.expression} = ${operation.result}", Toast.LENGTH_LONG).show()
-    }
-
-    private fun onOperationLongClick(operation : OperationUI){
-        val sdf = SimpleDateFormat("dd/M/yyyy - hh:mm:ss")
-        var currentDate = sdf.format(Date())
-        Toast.makeText(activity, currentDate, Toast.LENGTH_LONG).show()
-    }
 
 
     private fun getAllOperationsWs(callback: (List<OperationUI>) -> Unit){
@@ -132,6 +117,29 @@ class HistoryFragment : Fragment() {
                 }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+    }
+
+    private fun onOperationClick(operation: OperationUI){
+        Toast.makeText(activity,"${operation.expression} = ${operation.result}", Toast.LENGTH_LONG).show()
+        val emptyList = listOf<OperationUI>()
+        viewModel.onDeleteAllOperations { updateList(emptyList) }
+    }
+
+    private fun onOperationLongClick(operation : OperationUI){
+        val sdf = SimpleDateFormat("dd/M/yyyy - hh:mm:ss")
+        var currentDate = sdf.format(Date())
+        Toast.makeText(activity, "Removendo a operação selecionada", Toast.LENGTH_LONG).show()
+        viewModel.onDeleteOperation(operation.uuid) { viewModel.onGetHistory { updateList(it) }}
     }
 
     companion object {

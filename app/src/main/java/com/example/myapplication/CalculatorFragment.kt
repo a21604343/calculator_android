@@ -13,10 +13,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.databinding.FragmentCalculatorBinding
-import net.objecthunter.exp4j.ExpressionBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,7 +61,7 @@ class CalculatorFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         //viewModel.getHistory { listaHistorico }v
-        viewModel.getHistory { adapter.updateItems(it) }
+        getAllOperationsRetrofit { updateList(it) }
 
         binding.button1.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("1")}
         binding.button2.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("2")}
@@ -74,9 +77,9 @@ class CalculatorFragment : Fragment() {
         binding.buttonMinus.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("-")}
         binding.buttonDivide.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("/")}
         binding.buttonQuestionMark.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("*")}
-        binding.buttonClear.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("C")}
+        binding.buttonClear.setOnClickListener {binding.textVisor.text = viewModel.onClear()}
         binding.buttonSmaller.setOnClickListener {binding.textVisor.text = viewModel.onClickSymbol("P")}
-        binding.buttonEquals.setOnClickListener {binding.textVisor.text = viewModel.onClickEquals()}
+        binding.buttonEquals.setOnClickListener {onClickEquals()}
 
 
         binding.rvHistoric?.layoutManager = LinearLayoutManager(activity as Context)
@@ -87,6 +90,35 @@ class CalculatorFragment : Fragment() {
 
 
     }
+
+    private fun updateList(fires : List<OperationUI>){
+        CoroutineScope(Dispatchers.Main).launch {
+            adapter.updateItems(fires)
+        }
+    }
+
+    private fun getAllOperationsRetrofit(callback: (List<OperationUI>) -> Unit){
+        viewModel.onGetHistory(callback)
+
+    }
+
+    private fun onClickEquals() {
+        viewModel.onClickEquals {
+            CoroutineScope(Dispatchers.Main).launch {
+                //Toast.makeText(context, getString(R.string.registry_saved), Toast.LENGTH_LONG).show()
+                binding.textVisor.text = viewModel.getDisplayValue()
+                viewModel.onGetHistory { updateHistory(it) }
+            }
+        }
+    }
+
+    private fun updateHistory(operations: List<OperationUI>) {
+        val history = operations.map { OperationUI(it.uuid, it.expression, it.result, it.timestamp) }
+        CoroutineScope(Dispatchers.Main).launch {
+            adapter.updateItems(history)
+        }
+    }
+
 
 
     private fun onOperationClick(operation: OperationUI){

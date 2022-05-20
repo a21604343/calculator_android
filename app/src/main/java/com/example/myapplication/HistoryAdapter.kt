@@ -36,8 +36,8 @@ class HistoryAdapter(private val onOperationLongClick: (OperationUI) -> Unit, pr
             }
         })
 
-        holder.binding.textExpression.text = items[position]?.expression
-        holder.binding.textResult.text = items[position]?.result.toString()
+        holder.binding.textExpression.text = items[position].expression
+        holder.binding.textResult.text = items[position].result.toString()
     }
 
     override fun getItemCount(): Int {
