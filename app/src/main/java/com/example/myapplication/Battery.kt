@@ -17,7 +17,8 @@ class Battery private constructor(private val context : Context) : Runnable{
         val manager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
 
         val value = manager.getIntProperty(
-            BatteryManager.BATTERY_PROPERTY_CURRENT_NOW
+            BatteryManager.BATTERY_PROPERTY_CAPACITY
+            //BatteryManager.BATTERY_PROPERTY_CURRENT_NOW
         )
 
         return if (value != 0 && value != Int.MIN_VALUE)

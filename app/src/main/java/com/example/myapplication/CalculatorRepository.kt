@@ -36,6 +36,7 @@ class CalculatorRepository private constructor(private val context: Context,
 
     fun deleteOperation(uuid: String, onSuccess: () -> Unit) {
         remote.deleteOperation(uuid, onSuccess)
+        local.deleteOperation(uuid,onSuccess)
     }
 
     fun deleteAllOperations(onSuccess: () -> Unit) {
